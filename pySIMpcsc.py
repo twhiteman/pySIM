@@ -103,7 +103,7 @@ class PCSCcontroller(wxskinDialog):
                 self.state = SIM_STATE_CONNECTED
                 self.gatherInfo()
             else:
-                print "Blah blah"
+                #~ print "Blah blah"
                 dlg = wxMessageDialog(self, 'Unable to connect to reader: %s' % self.getReaderName(), 'Reader error', 
                                      wxOK | wxICON_INFORMATION) 
                 dlg.ShowModal() 

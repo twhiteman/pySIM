@@ -296,10 +296,10 @@ class SMS(wxskinFrame, wxColumnSorterMixin):
                         sms.smsFromData(data)
                         self.itemDataMap[i] = (sms.status, sms.timestamp, sms.number, sms.message, sms)
                     except:
-                        print i
-                        print data
-                        print_exc()
-                        #pass
+                        #~ print i
+                        #~ print data
+                        #~ print_exc()
+                        pass
         except:
             # Finished with the guage
             print_exc()
