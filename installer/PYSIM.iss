@@ -2,21 +2,22 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [Setup]
-AppName=pySIM
-AppVerName=pySIM 1.2
+AppName=SimReader
+AppVerName=SimReader 1.3
 AppPublisher=Todd Whiteman
-AppPublisherURL=http://users.tpg.com.au/adslov0h/pySIM.html
-AppSupportURL=http://users.tpg.com.au/adslov0h/pySIM.html
-AppUpdatesURL=http://users.tpg.com.au/adslov0h/pySIM.html
-DefaultDirName={pf}\pySIM
-DefaultGroupName=pySIM
+AppPublisherURL=http://twhiteman.netfirms.com/pySIM.html
+AppSupportURL=http://twhiteman.netfirms.com/pySIM.html
+AppUpdatesURL=http://twhiteman.netfirms.com/pySIM.html
+DefaultDirName={pf}\SimReader
+DefaultGroupName=SimReader
 
 [Tasks]
 Name: "desktopicon"; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"
 
 [Files]
-Source: "C:\Programming\Python\pySimReader\installer\pySIM.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Programming\Python\pySimReader\installer\pySimReader.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Programming\Python\pySimReader\installer\pySIM.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Windows\System32\msvcr71.dll"; DestDir: "{sys}"; Flags: allowunsafefiles
 ; Source: "C:\Programming\Python\pySimReader\installer\_PCSCHandle.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; Source: "C:\Programming\Python\pySimReader\installer\_sre.pyd"; DestDir: "{app}"; Flags: ignoreversion
 ; Source: "C:\Programming\Python\pySimReader\installer\datetime.pyd"; DestDir: "{app}"; Flags: ignoreversion
@@ -29,9 +30,8 @@ Source: "C:\Programming\Python\pySimReader\installer\pySIM.ico"; DestDir: "{app}
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\pySIM"; Filename: "{app}\pySIM.exe"
-Name: "{userdesktop}\pySIM"; Filename: "{app}\pySIM.exe"; Tasks: desktopicon
+Name: "{group}\SimReader"; Filename: "{app}\pySimReader.exe"
+Name: "{userdesktop}\SimReader"; Filename: "{app}\pySimReader.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\pySIM.exe"; Description: "Launch pySIM"; Flags: nowait postinstall skipifsilent
-
+Filename: "{app}\pySimReader.exe"; Description: "Launch Sim Reader"; Flags: nowait postinstall skipifsilent
