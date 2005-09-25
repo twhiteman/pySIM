@@ -226,8 +226,8 @@ class pySIM(wxskinFrame):
 
     Program Author:
       - Todd Whiteman
-      - twhiteman@tpg.com.au
-      - http://users.tpg.com.au/adslov0h/pySIM.html
+      - twhitema@gmail.com
+      - http://twhiteman.netfirms.com/pySIM.html
 """
     aboutPySIMhtml = """<html><body>
     pySIM is a multifunctional SIM handling program.
@@ -243,8 +243,8 @@ class pySIM(wxskinFrame):
 
     Program Author:
       - Todd Whiteman
-      - twhiteman@tpg.com.au
-      - <a href="http://users.tpg.com.au/adslov0h/pySIM.html">pySIM Website</a>
+      - twhitema@gmail.com
+      - <a href="http://twhiteman.netfirms.com/pySIM.html">pySIM Website</a>
     </body></html>
 """
     def menuHelpAbout(self, event):
@@ -365,4 +365,3 @@ if __name__ == '__main__':
         #~ pass
         #~ print_exc()
 	log.exception(exc)
-	#~ raw_input('blah')
