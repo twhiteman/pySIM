@@ -1,3 +1,4 @@
+# -*- coding: latin-1 -*-
 # Copyright (C) 2005, Todd Whiteman
 #
 # This program is free software; you can redistribute it and/or

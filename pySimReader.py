@@ -27,7 +27,6 @@ Smartcard functions for PIN, phonebook and SMS management.
 #                            I M P O R T S
 #===============================================================================
 
-from wxPython.wx import *
 import wx
 import wx.html as html_module
 from traceback import print_exc
@@ -47,23 +46,23 @@ import logging
 #               wx Identifiers for menus and button controls                        #
 #####################################################################################
 
-ID_MENU_FILE_EXIT = wxNewId()
-ID_MENU_PHONEBOOK_ADN = wxNewId()
-ID_MENU_PHONEBOOK_FDN = wxNewId()
-ID_MENU_SMS = wxNewId()
-ID_MENU_SIM_INFO = wxNewId()
-ID_MENU_SIM_PIN_CHANGE = wxNewId()
-ID_MENU_SIM_PIN_ENABLE = wxNewId()
-ID_MENU_SIM_PIN_DISABLE = wxNewId()
-ID_MENU_SIM_BACKUP = wxNewId()
-ID_MENU_SIM_RESTORE = wxNewId()
-ID_MENU_HELP_HELP = wxNewId()
-ID_MENU_HELP_ABOUT = wxNewId()
+ID_MENU_FILE_EXIT = wx.NewId()
+ID_MENU_PHONEBOOK_ADN = wx.NewId()
+ID_MENU_PHONEBOOK_FDN = wx.NewId()
+ID_MENU_SMS = wx.NewId()
+ID_MENU_SIM_INFO = wx.NewId()
+ID_MENU_SIM_PIN_CHANGE = wx.NewId()
+ID_MENU_SIM_PIN_ENABLE = wx.NewId()
+ID_MENU_SIM_PIN_DISABLE = wx.NewId()
+ID_MENU_SIM_BACKUP = wx.NewId()
+ID_MENU_SIM_RESTORE = wx.NewId()
+ID_MENU_HELP_HELP = wx.NewId()
+ID_MENU_HELP_ABOUT = wx.NewId()
 
-ID_BUTTON_CONNECT = wxNewId()
-ID_BUTTON_PHONEBOOK = wxNewId()
-ID_BUTTON_SMS = wxNewId()
-ID_BUTTON_EXIT = wxNewId()
+ID_BUTTON_CONNECT = wx.NewId()
+ID_BUTTON_PHONEBOOK = wx.NewId()
+ID_BUTTON_SMS = wx.NewId()
+ID_BUTTON_EXIT = wx.NewId()
 
 
 #####################################################################################
@@ -75,7 +74,8 @@ log = None
 def initaliseLogger():
     global log
     log = logging.getLogger("pySimReader")
-    log.setLevel(logging.INFO)
+    #~ log.setLevel(logging.INFO)
+    log.setLevel(logging.WARNING)
     # Define the handler and formmatter
     myLogHandler = logging.FileHandler("pySimReader.log", "w")
     # Attach the formatter to the handler and the handler to the log
@@ -109,26 +109,26 @@ class pySIM(wxskinFrame):
 
     def createMenus(self):
         # Creating the menubar.
-        menuBar = wxMenuBar()
+        menuBar = wx.MenuBar()
 
         # Setting up the 'File' menu.
-        self.menuFile = wxMenu()
+        self.menuFile = wx.Menu()
         self.menuFile.Append(ID_MENU_FILE_EXIT, "E&xit"," Terminate this program")
         menuBar.Append(self.menuFile,"&File")
 
         # Setting up the 'Phonebook' menu.
-        self.menuPhonebook = wxMenu()
+        self.menuPhonebook = wx.Menu()
         self.menuPhonebook.Append(ID_MENU_PHONEBOOK_ADN, "Phonebook (ADN)"," Manage your phonebook (Abbreviated Dial Numbers)")
         self.menuPhonebook.Append(ID_MENU_PHONEBOOK_FDN, "Fixed Dialing Numbers (FDN)"," Manage your Fixed Dialing Numbers")
         menuBar.Append(self.menuPhonebook,"&Phonebook")
 
         # Setting up the 'SMS' menu.
-        self.menuMessages = wxMenu()
+        self.menuMessages = wx.Menu()
         self.menuMessages.Append(ID_MENU_SMS, "SMS"," Manage your SMS messages")
         menuBar.Append(self.menuMessages,"&Messages")
 
         # Setting up the 'SIM' menu.
-        self.menuSIM = wxMenu()
+        self.menuSIM = wx.Menu()
         self.menuSIM.Append(ID_MENU_SIM_INFO, "SIM Information"," Information about your SIM card")
         self.menuSIM.AppendSeparator()
         self.menuSIM.Append(ID_MENU_SIM_PIN_CHANGE, "Change PIN"," Change your PIN code (CHV1)")
@@ -140,7 +140,7 @@ class pySIM(wxskinFrame):
         menuBar.Append(self.menuSIM, "&SIM")
 
         # Setting up the menu.
-        self.menuHelp = wxMenu()
+        self.menuHelp = wx.Menu()
         self.menuHelp.Append(ID_MENU_HELP_HELP, "&Help"," Help documentation")
         self.menuHelp.AppendSeparator()
         self.menuHelp.Append(ID_MENU_HELP_ABOUT, "&About"," Information about this program")
@@ -150,39 +150,39 @@ class pySIM(wxskinFrame):
         self.SetMenuBar(menuBar)
 
         #Add the menu handlers
-        EVT_MENU(self, ID_MENU_FILE_EXIT, self.closeWindow)
-        EVT_MENU(self, ID_MENU_PHONEBOOK_ADN, self.buttonPhonebook)
-        EVT_MENU(self, ID_MENU_PHONEBOOK_FDN, self.buttonFDN)
-        EVT_MENU(self, ID_MENU_SMS, self.buttonSMS)
-        EVT_MENU(self, ID_MENU_SIM_INFO, self.menuSIMInfo)
-        EVT_MENU(self, ID_MENU_SIM_PIN_CHANGE, self.menuChangePIN)
-        EVT_MENU(self, ID_MENU_SIM_PIN_ENABLE, self.menuEnablePIN)
-        EVT_MENU(self, ID_MENU_SIM_PIN_DISABLE, self.menuDisablePIN)
-        EVT_MENU(self, ID_MENU_HELP_HELP, self.menuHelpHelp)
-        EVT_MENU(self, ID_MENU_HELP_ABOUT, self.menuHelpAbout)
+        wx.EVT_MENU(self, ID_MENU_FILE_EXIT, self.closeWindow)
+        wx.EVT_MENU(self, ID_MENU_PHONEBOOK_ADN, self.buttonPhonebook)
+        wx.EVT_MENU(self, ID_MENU_PHONEBOOK_FDN, self.buttonFDN)
+        wx.EVT_MENU(self, ID_MENU_SMS, self.buttonSMS)
+        wx.EVT_MENU(self, ID_MENU_SIM_INFO, self.menuSIMInfo)
+        wx.EVT_MENU(self, ID_MENU_SIM_PIN_CHANGE, self.menuChangePIN)
+        wx.EVT_MENU(self, ID_MENU_SIM_PIN_ENABLE, self.menuEnablePIN)
+        wx.EVT_MENU(self, ID_MENU_SIM_PIN_DISABLE, self.menuDisablePIN)
+        wx.EVT_MENU(self, ID_MENU_HELP_HELP, self.menuHelpHelp)
+        wx.EVT_MENU(self, ID_MENU_HELP_ABOUT, self.menuHelpAbout)
 
     def createFrames(self):
         # Create the layout component and add controls to it
-        self.sizer1 = wxBoxSizer(wxHORIZONTAL)
-        self.bConnect = wxButton(self, ID_BUTTON_CONNECT, "Connect reader")
-        self.sizer1.Add(self.bConnect, 1, wxEXPAND|wxALL)
+        self.sizer1 = wx.BoxSizer(wx.HORIZONTAL)
+        self.bConnect = wx.Button(self, ID_BUTTON_CONNECT, "Connect reader")
+        self.sizer1.Add(self.bConnect, 1, wx.EXPAND|wx.ALL)
 
-        self.sizer2 = wxBoxSizer(wxHORIZONTAL)
-        self.bPhonebook = wxButton(self, ID_BUTTON_PHONEBOOK, "Phonebook")
-        self.bSMS = wxButton(self, ID_BUTTON_SMS, "SMS")
-        self.sizer2.Add(self.bPhonebook, 1, wxEXPAND|wxLEFT|wxRIGHT, 5)
-        self.sizer2.Add(self.bSMS, 1, wxEXPAND|wxLEFT|wxRIGHT, 5)
+        self.sizer2 = wx.BoxSizer(wx.HORIZONTAL)
+        self.bPhonebook = wx.Button(self, ID_BUTTON_PHONEBOOK, "Phonebook")
+        self.bSMS = wx.Button(self, ID_BUTTON_SMS, "SMS")
+        self.sizer2.Add(self.bPhonebook, 1, wx.EXPAND|wx.LEFT|wx.RIGHT, 5)
+        self.sizer2.Add(self.bSMS, 1, wx.EXPAND|wx.LEFT|wx.RIGHT, 5)
 
-        self.sizer3 = wxBoxSizer(wxHORIZONTAL)
-        self.bExit = wxButton(self, ID_BUTTON_EXIT, "Quit")
+        self.sizer3 = wx.BoxSizer(wx.HORIZONTAL)
+        self.bExit = wx.Button(self, ID_BUTTON_EXIT, "Quit")
 
-        self.sizer3.Add(self.bExit, 1, wxEXPAND|wxALL)
+        self.sizer3.Add(self.bExit, 1, wx.EXPAND|wx.ALL)
 
         # Use sizers to set layout options
-        self.sizer = wxBoxSizer(wxVERTICAL)
-        self.sizer.Add(self.sizer1,1,wxEXPAND|wxLEFT|wxRIGHT|wxTOP,15)
-        self.sizer.Add(self.sizer2,1,wxEXPAND|wxALL,10)
-        self.sizer.Add(self.sizer3,1,wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM,15)
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        self.sizer.Add(self.sizer1,1,wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP,15)
+        self.sizer.Add(self.sizer2,1,wx.EXPAND|wx.ALL,10)
+        self.sizer.Add(self.sizer3,1,wx.EXPAND|wx.LEFT|wx.RIGHT|wx.BOTTOM,15)
         self.sizer.SetMinSize((250,150))
 
         # Layout for frame
@@ -191,24 +191,24 @@ class pySIM(wxskinFrame):
         self.sizer.Fit(self)
 
         # Add the button handlers
-        EVT_BUTTON(self, ID_BUTTON_CONNECT, self.buttonConnectReader)
-        EVT_BUTTON(self, ID_BUTTON_PHONEBOOK, self.buttonPhonebook)
-        EVT_BUTTON(self, ID_BUTTON_SMS, self.buttonSMS)
-        EVT_BUTTON(self, ID_BUTTON_EXIT, self.closeWindow)
-        EVT_CLOSE(self, self.closeWindow)
+        wx.EVT_BUTTON(self, ID_BUTTON_CONNECT, self.buttonConnectReader)
+        wx.EVT_BUTTON(self, ID_BUTTON_PHONEBOOK, self.buttonPhonebook)
+        wx.EVT_BUTTON(self, ID_BUTTON_SMS, self.buttonSMS)
+        wx.EVT_BUTTON(self, ID_BUTTON_EXIT, self.closeWindow)
+        wx.EVT_CLOSE(self, self.closeWindow)
 
     def closeWindow(self, event):
         """Close the application"""
         if self.pb:
-            self.pb.Close(true)
+            self.pb.Close(True)
         if self.sms:
-            self.sms.Close(true)
+            self.sms.Close(True)
         self.Destroy()
 
     def menuHelpHelp(self, event):
         """Show help dialog"""
-        dlg = wxMessageDialog(self, 'Not Yet Implimented!', 'ToDo',
-                             wxOK | wxICON_INFORMATION)
+        dlg = wx.MessageDialog(self, 'Not Yet Implimented!', 'ToDo',
+                             wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
 
@@ -249,8 +249,8 @@ class pySIM(wxskinFrame):
 """
     def menuHelpAbout(self, event):
         """Show about pySIM dialog"""
-        dlg = wxMessageDialog(self, self.aboutPySIM, 'About pySIM',
-                             wxOK | wxICON_INFORMATION)
+        dlg = wx.MessageDialog(self, self.aboutPySIM, 'About pySIM',
+                             wx.OK | wx.ICON_INFORMATION)
         #~ ovr = html_module.HtmlWindow(dlg, -1, size=(400, 400))
         #~ ovr.SetPage(self.aboutPySIMhtml)
         dlg.ShowModal()
@@ -344,13 +344,13 @@ class pySIM(wxskinFrame):
 #----------------------------------------------------------------------
 #####################################################################################
 
-class pySIMApp(wxApp):
+class pySIMApp(wx.App):
     """Class to control the WX application"""
     def OnInit(self):
-        frame = pySIM(NULL, -1, "pySIM", wxPyDefaultPosition,(250,250) )
-        frame.Show(true)
+        frame = pySIM(None, -1, "pySIM", wx.DefaultPosition,(250,250) )
+        frame.Show(True)
         # self.setTopWindow(frame)
-        return true
+        return True
 
 #####################################################################################
 #----------------------------------------------------------------------
@@ -362,6 +362,5 @@ if __name__ == '__main__':
         # create instance and start the event loop
         pySIMApp().MainLoop()
     except Exception, exc:
-        #~ pass
         #~ print_exc()
-	log.exception(exc)
+        log.exception(exc)

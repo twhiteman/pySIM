@@ -18,7 +18,7 @@
 #                            I M P O R T S
 #===============================================================================
 
-from wxPython.wx import *
+import wx
 from pySIMconstants import *
 from pySIMskin import *
 from pySIMutils import *
@@ -30,16 +30,18 @@ try:
     import PCSCHandle
 except ImportError:
     PCSCImportError = 1
+    import traceback
+    traceback.print_exc()
 
-ID_LISTBOX = wxNewId() 
-ID_BUTTON_OK = wxNewId() 
-ID_BUTTON_CANCEL = wxNewId() 
+ID_LISTBOX = wx.NewId() 
+ID_BUTTON_OK = wx.NewId() 
+ID_BUTTON_CANCEL = wx.NewId() 
 
 class PCSCcontroller(wxskinDialog):
     def __init__(self, parent):
         self.parent = parent
         wxskinDialog.__init__(self, parent, -1, "Select card reader",
-                          wxPyDefaultPosition, wxPyDefaultSize, wxDEFAULT_DIALOG_STYLE)
+                          wx.DefaultPosition, wx.DefaultSize, wx.DEFAULT_DIALOG_STYLE)
         self.state = SIM_STATE_DISCONNECTED
         self.readerName = ""
         self.chv1_enabled = 0
@@ -59,8 +61,8 @@ class PCSCcontroller(wxskinDialog):
         self.Show(0)
 
     def createLayout(self):
-        self.listbox = wxListBox(self, ID_LISTBOX, wxDefaultPosition, wxDefaultSize, [],
-                                 wxLB_SINGLE | wxLB_SORT, wxDefaultValidator)
+        self.listbox = wx.ListBox(self, ID_LISTBOX, wx.DefaultPosition, wx.DefaultSize, [],
+                                 wx.LB_SINGLE | wx.LB_SORT, wx.DefaultValidator)
         self.listbox.typedText = ""
 
 	try:
@@ -71,22 +73,22 @@ class PCSCcontroller(wxskinDialog):
             if i:
                 self.listbox.Append(i)
 
-        self.bOK = wxButton(self, ID_BUTTON_OK, "OK")
-        self.bCancel = wxButton(self, ID_BUTTON_CANCEL, "Cancel")
+        self.bOK = wx.Button(self, ID_BUTTON_OK, "OK")
+        self.bCancel = wx.Button(self, ID_BUTTON_CANCEL, "Cancel")
 
-        self.sizer1 = wxBoxSizer(wxVERTICAL)
-        self.sizer2 = wxBoxSizer(wxHORIZONTAL)
-        self.sizer2.Add(self.bOK, 1, wxEXPAND|wxALL,10)
-        self.sizer2.Add(self.bCancel, 1, wxEXPAND|wxALL,10)
-        self.sizer1.Add(self.listbox, 1, wxEXPAND|wxALL,20)
+        self.sizer1 = wx.BoxSizer(wx.VERTICAL)
+        self.sizer2 = wx.BoxSizer(wx.HORIZONTAL)
+        self.sizer2.Add(self.bOK, 1, wx.EXPAND|wx.ALL,10)
+        self.sizer2.Add(self.bCancel, 1, wx.EXPAND|wx.ALL,10)
+        self.sizer1.Add(self.listbox, 1, wx.EXPAND|wx.ALL,20)
         self.sizer1.Add(self.sizer2)
         self.SetSizer(self.sizer1)
         self.SetAutoLayout(1)
         self.sizer1.Fit(self)
 
-        EVT_LISTBOX_DCLICK(self, ID_LISTBOX, self.selectNewReaderOK)
-        EVT_BUTTON(self, ID_BUTTON_OK, self.selectNewReaderOK)
-        EVT_BUTTON(self, ID_BUTTON_CANCEL, self.selectNewReaderCancel)
+        wx.EVT_LISTBOX_DCLICK(self, ID_LISTBOX, self.selectNewReaderOK)
+        wx.EVT_BUTTON(self, ID_BUTTON_OK, self.selectNewReaderOK)
+        wx.EVT_BUTTON(self, ID_BUTTON_CANCEL, self.selectNewReaderCancel)
 
     def getState(self):
         return self.state
@@ -104,8 +106,8 @@ class PCSCcontroller(wxskinDialog):
                 self.gatherInfo()
             else:
                 #~ print "Blah blah"
-                dlg = wxMessageDialog(self, 'Unable to connect to reader: %s' % self.getReaderName(), 'Reader error', 
-                                     wxOK | wxICON_INFORMATION) 
+                dlg = wx.MessageDialog(self, 'Unable to connect to reader: %s' % self.getReaderName(), 'Reader error', 
+                                     wx.OK | wx.ICON_INFORMATION) 
                 dlg.ShowModal() 
                 dlg.Destroy()
                 self.readerName = ""
@@ -156,7 +158,7 @@ class PCSCcontroller(wxskinDialog):
         
         data, sw = self.sendAPDU(command)
         if sw != matchSW:
-            raise "Status words do not match. Result: %s, Expected: %s" % (sw, matchSW)
+            raise RuntimeError("Status words do not match. Result: %s, Expected: %s" % (sw, matchSW))
         return data, sw
 
     def gatherInfo(self):
@@ -195,7 +197,7 @@ class PCSCcontroller(wxskinDialog):
         for i in dirList:
             data, sw = self.sendAPDU("A0A4000002%s" % i)
             if sw[0:2] != SW_FOLDER_SELECTED_OK[0:2]:
-                raise "Cannot select file/folder %s" % i
+                raise RuntimeError("Cannot select file/folder %s" % i)
 
     def checkAndVerifyCHV1(self, checktype=CHV_UPDATE, data=None):
         if not self.chv1_enabled:
@@ -222,18 +224,18 @@ class PCSCcontroller(wxskinDialog):
             return 1
         elif val == 1: # means chv1 is needed, try and verify it
             # Have not verified yet, try now, ask for the PIN number
-            dlg = wxskinTextEntryDialog(self, 'Enter your PIN (4 to 8 digits) :', 'PIN verification', '', style=wxTE_PASSWORD)
+            dlg = wxskinTextEntryDialog(self, 'Enter your PIN (4 to 8 digits) :', 'PIN verification', '', style=wx.TE_PASSWORD|wx.OK|wx.CANCEL)
             ret = dlg.ShowModal()
             self.chv1 = dlg.GetValue()
             dlg.Destroy()
 
-            if ret == wxID_OK:
-                ok = true
+            if ret == wx.ID_OK:
+                ok = True
                 for i in self.chv1:
                     if i not in "0123456789":
-                        ok = false
+                        ok = False
                 if len(self.chv1) < 4 or len(self.chv1) > 8:
-                    ok = false
+                    ok = False
 
                 if not ok:
                     pySIMmessage(self, "Invalid PIN! Must be 4 to 8 digits long\n\nDigits are these characters: 0123456789", "SIM card error")

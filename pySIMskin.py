@@ -18,54 +18,54 @@
 #                            I M P O R T S
 #===============================================================================
 
-from wxPython.wx import *
+import wx
 
-backgroundColour = wxColour(230, 230, 255)
+backgroundColour = wx.Colour(230, 230, 255)
 
 ################################################################################
 #                           pySIM skin helper classes                          #
 ################################################################################
 
-class wxskinFrame(wxFrame):
-    def __init__(self, parent, ID=-1, title="Frame", pos=wxPyDefaultPosition, size=wxPyDefaultSize):
-        wxFrame.__init__(self, parent, ID, title, pos, size)
+class wxskinFrame(wx.Frame):
+    def __init__(self, parent, ID=-1, title="Frame", pos=wx.DefaultPosition, size=wx.DefaultSize):
+        wx.Frame.__init__(self, parent, ID, title, pos, size)
         self.SetBackgroundColour(backgroundColour)
-        icon = wxIcon('pySIM.ico', wxBITMAP_TYPE_ICO)
+        icon = wx.Icon('pySIM.ico', wx.BITMAP_TYPE_ICO)
         self.SetIcon(icon)
 
-class wxskinPanel(wxPanel):
-    def __init__(self, parent, ID=-1, pos=wxPyDefaultPosition, size=wxPyDefaultSize, style=wxTAB_TRAVERSAL, name="panel"):
-        wxPanel.__init__(self, parent, ID, pos, size, style, name)
+class wxskinPanel(wx.Panel):
+    def __init__(self, parent, ID=-1, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.TAB_TRAVERSAL, name="panel"):
+        wx.Panel.__init__(self, parent, ID, pos, size, style, name)
         self.SetBackgroundColour(backgroundColour)
 
-class wxskinDialog(wxDialog):
-    def __init__(self, parent, id=-1, title="Dialog", pos=wxPyDefaultPosition, size=wxPyDefaultSize, style=wxDEFAULT_DIALOG_STYLE):
-        wxDialog.__init__(self, parent, id, title)
+class wxskinDialog(wx.Dialog):
+    def __init__(self, parent, id=-1, title="Dialog", pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_DIALOG_STYLE):
+        wx.Dialog.__init__(self, parent, id, title)
         self.SetBackgroundColour(backgroundColour)
 
-class wxskinStaticText(wxStaticText):
+class wxskinStaticText(wx.StaticText):
     def __init__(self, parent, id, text):
-        wxStaticText.__init__(self, parent, id, text)
+        wx.StaticText.__init__(self, parent, id, text)
         self.SetBackgroundColour(backgroundColour)
 
-class wxskinListCtrl(wxListCtrl):
-    def __init__(self, parent, ID=-1, pos=wxPyDefaultPosition, size=wxPyDefaultSize, style=wxLC_ICON):
-        wxListCtrl.__init__(self, parent, ID, pos, size, style)
+class wxskinListCtrl(wx.ListCtrl):
+    def __init__(self, parent, ID=-1, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.LC_ICON):
+        wx.ListCtrl.__init__(self, parent, ID, pos, size, style)
         self.SetBackgroundColour(backgroundColour)
 
-class wxskinProgressDialog(wxProgressDialog):
-    def __init__(self, title, message, maximum=100, parent=NULL, style=wxPD_AUTO_HIDE|wxPD_APP_MODAL):
-        wxProgressDialog.__init__(self, title, message, maximum, parent, style)
+class wxskinProgressDialog(wx.ProgressDialog):
+    def __init__(self, title, message, maximum=100, parent=None, style=wx.PD_AUTO_HIDE|wx.PD_APP_MODAL):
+        wx.ProgressDialog.__init__(self, title, message, maximum, parent, style)
         self.SetBackgroundColour(backgroundColour)
 
-class wxskinMessageDialog(wxMessageDialog):
-    def __init__(self, parent, messageString, titleString="pySIM", style=wxOK | wxICON_INFORMATION, pos=wxPyDefaultPosition):
-        wxMessageDialog.__init__(self, parent, messageString, titleString, style, pos)
+class wxskinMessageDialog(wx.MessageDialog):
+    def __init__(self, parent, messageString, titleString="pySIM", style=wx.OK | wx.ICON_INFORMATION, pos=wx.DefaultPosition):
+        wx.MessageDialog.__init__(self, parent, messageString, titleString, style, pos)
         self.SetBackgroundColour(backgroundColour)
 
-class wxskinTextEntryDialog(wxTextEntryDialog):
-    def __init__(self, parent, messageString, titleString="pySIM", defaultValue='', style=wxOK|wxCANCEL|wxCENTRE, pos=wxPyDefaultPosition):
-        wxTextEntryDialog.__init__(self, parent, messageString, titleString, defaultValue, style, pos)
+class wxskinTextEntryDialog(wx.TextEntryDialog):
+    def __init__(self, parent, messageString, titleString="pySIM", defaultValue='', style=wx.OK|wx.CANCEL|wx.CENTRE, pos=wx.DefaultPosition):
+        wx.TextEntryDialog.__init__(self, parent, messageString, titleString, defaultValue, style, pos)
         self.SetBackgroundColour(backgroundColour)
 
 
@@ -74,7 +74,7 @@ class wxskinTextEntryDialog(wxTextEntryDialog):
 ################################################################################
 
 class pySIMmessage(wxskinMessageDialog):
-    def __init__(self, parent, messageString, titleString="pySIM", style=wxOK | wxICON_INFORMATION):
+    def __init__(self, parent, messageString, titleString="pySIM", style=wx.OK | wx.ICON_INFORMATION):
         wxskinMessageDialog.__init__(self, parent, messageString, titleString, style)
         self.ShowModal() 
         self.Destroy()
@@ -91,13 +91,13 @@ class pySIMenterText(wxskinTextEntryDialog):
 #                           pySIM other helper classes                         #
 ################################################################################
 
-class pySIMvalidator(wxPyValidator):
+class pySIMvalidator(wx.PyValidator):
     def __init__(self, charmap=None, minlength=None, maxlength=None):
-        wxPyValidator.__init__(self)
+        wx.PyValidator.__init__(self)
         self.charmap = charmap
         self.minlength = minlength
         self.maxlength = maxlength
-        EVT_CHAR(self, self.OnChar)
+        wx.EVT_CHAR(self, self.OnChar)
 
     def Clone(self):
         return pySIMvalidator(self.charmap, self.minlength, self.maxlength)
@@ -108,25 +108,25 @@ class pySIMvalidator(wxPyValidator):
         if self.charmap:
             for x in val:
                 if x not in self.charmap:
-                    return false
+                    return False
         if self.minlength:
             if len(val) < self.minlength:
-                return false
+                return False
         if self.maxlength:
             if len(val) > self.maxlength:
-                return false
-        return true
+                return False
+        return True
 
     def TransferToWindow(self):
-        return true # Prevent wxDialog from complaining.
+        return True # Prevent wxDialog from complaining.
 
 
     def TransferFromWindow(self):
-        return true # Prevent wxDialog from complaining.
+        return True # Prevent wxDialog from complaining.
 
     def OnChar(self, event):
-        key = event.KeyCode()
-        if key < WXK_SPACE or key == WXK_DELETE or key > 255:
+        key = event.KeyCode
+        if key < wx.WXK_SPACE or key == wx.WXK_DELETE or key > 255:
             event.Skip()
             return
         if not self.charmap or chr(key) in self.charmap:
@@ -135,8 +135,8 @@ class pySIMvalidator(wxPyValidator):
                 event.Skip()
                 return
 
-        if not wxValidator_IsSilent():
-            wxBell()
+        if not wx.Validator_IsSilent():
+            wx.Bell()
 
         # Returning without calling even.Skip eats the event before it
         # gets to the text control

@@ -18,36 +18,36 @@
 #                            I M P O R T S
 #===============================================================================
 
-from wxPython.wx import *
-from wxPython.xrc import *
+import wx 
+from wx.xrc import *
 from pySIMconstants import *
 from pySIMutils import *
 from pySIMskin import *
 from traceback import print_exc
 from binascii import hexlify, unhexlify
 
-ID_BUTTON_CHANGE_PIN = wxNewId()
+ID_BUTTON_CHANGE_PIN = wx.NewId()
 
 class topPanel(wxskinPanel):
     def __init__(self, parent, SIMcontrol, id=-1):
-        wxskinPanel.__init__(self, parent, id, style=wxSIMPLE_BORDER)
+        wxskinPanel.__init__(self, parent, id, style=wx.SIMPLE_BORDER)
         self.parent = parent
         self.SIM = SIMcontrol
         self.createWidgets()
 
     def createWidgets(self):
-        sizer = wxBoxSizer(wxVERTICAL)
+        sizer = wx.BoxSizer(wx.VERTICAL)
 
         # Serial number: i.e. 8961080000000522829
         self.SIM.gotoFile(["3F00", "2FE2"])
         data, sw = self.SIM.sendAPDUmatchSW("A0B000000A", SW_OK)
         s = swapNibbles(removePadding(data))
         label = wxskinStaticText(self, -1, "Serial number:")
-        text = wxTextCtrl(self, -1, s, style=wxTE_READONLY)
-        fgs = wxBoxSizer(wxHORIZONTAL)
-        fgs.Add(label, 1, wxALIGN_LEFT | wxLEFT, 10)
-        fgs.Add(text, 1, wxALIGN_RIGHT | wxRIGHT, 10)
-        sizer.Add(fgs, 1, wxALL, 5)
+        text = wx.TextCtrl(self, -1, s, style=wx.TE_READONLY)
+        fgs = wx.BoxSizer(wx.HORIZONTAL)
+        fgs.Add(label, 1, wx.ALIGN_LEFT | wx.LEFT, 10)
+        fgs.Add(text, 1, wx.ALIGN_RIGHT | wx.RIGHT, 10)
+        sizer.Add(fgs, 1, wx.ALL, 5)
 
         # IMSI: i.e. 505084000052282
         self.SIM.gotoFile(["3F00", "7F20", "6F07"])
@@ -55,11 +55,11 @@ class topPanel(wxskinPanel):
         data, sw = self.SIM.sendAPDUmatchSW("A0B0000009", SW_OK)
         s = swapNibbles(removePadding(data[2:]))[1:]
         label = wxskinStaticText(self, -1, "IMSI number:")
-        text= wxTextCtrl(self, -1, s, style=wxTE_READONLY)
-        fgs = wxBoxSizer(wxHORIZONTAL)
-        fgs.Add(label, 1, wxALIGN_LEFT | wxLEFT, 10)
-        fgs.Add(text, 1, wxALIGN_RIGHT | wxRIGHT, 10)
-        sizer.Add(fgs, 1, wxALL, 5)
+        text= wx.TextCtrl(self, -1, s, style=wx.TE_READONLY)
+        fgs = wx.BoxSizer(wx.HORIZONTAL)
+        fgs.Add(label, 1, wx.ALIGN_LEFT | wx.LEFT, 10)
+        fgs.Add(text, 1, wx.ALIGN_RIGHT | wx.RIGHT, 10)
+        sizer.Add(fgs, 1, wx.ALL, 5)
 
         # SIM Phase: i.e. 2+
         self.SIM.gotoFile(["3F00", "7F20", "6FAE"])
@@ -71,11 +71,11 @@ class topPanel(wxskinPanel):
         else:
             s = 'Phase 2+'
         label = wxskinStaticText(self, -1, "SIM phase:")
-        text = wxTextCtrl(self, -1, s, style=wxTE_READONLY)
-        fgs = wxBoxSizer(wxHORIZONTAL)
-        fgs.Add(label, 1, wxALIGN_LEFT | wxLEFT, 10)
-        fgs.Add(text, 1, wxALIGN_RIGHT | wxRIGHT, 10)
-        sizer.Add(fgs, 1, wxALL, 5)
+        text = wx.TextCtrl(self, -1, s, style=wx.TE_READONLY)
+        fgs = wx.BoxSizer(wx.HORIZONTAL)
+        fgs.Add(label, 1, wx.ALIGN_LEFT | wx.LEFT, 10)
+        fgs.Add(text, 1, wx.ALIGN_RIGHT | wx.RIGHT, 10)
+        sizer.Add(fgs, 1, wx.ALL, 5)
 
         self.SetSizer(sizer)
         self.SetAutoLayout(1) 
@@ -84,32 +84,32 @@ class topPanel(wxskinPanel):
 
 class bottomPanel(wxskinPanel):
     def __init__(self, parent, SIMcontrol, id=-1):
-        wxskinPanel.__init__(self, parent, id, style=wxSIMPLE_BORDER)
+        wxskinPanel.__init__(self, parent, id, style=wx.SIMPLE_BORDER)
         self.parent = parent
         self.SIM = SIMcontrol
         self.createWidgets()
 
     def createWidgets(self):
-        sizer = wxGridSizer(3,3,5,5)
+        sizer = wx.GridSizer(3,3,5,5)
 
         self.SIM.gatherInfo()
-        sizer.Add(0,10, 1, wxLEFT, 10) # Spacer
-        sizer.Add(wxskinStaticText(self, -1, "Activated"), 1, wxLEFT | wxRIGHT, 10)
-        sizer.Add(wxskinStaticText(self, -1, "Tries left"), 1, wxRIGHT, 10)
+        sizer.Add(wx.Size(0,0), 10, 1, wx.LEFT, 10) # Spacer
+        sizer.Add(wxskinStaticText(self, -1, "Activated"), 1, wx.LEFT | wx.RIGHT, 10)
+        sizer.Add(wxskinStaticText(self, -1, "Tries left"), 1, wx.RIGHT, 10)
 
-        sizer.Add(wxskinStaticText(self, -1, "PIN1"), 1, wxLEFT, 10)
+        sizer.Add(wxskinStaticText(self, -1, "PIN1"), 1, wx.LEFT, 10)
         if self.SIM.chv1_enabled:
-            sizer.Add(wxTextCtrl(self, -1, "Yes", style=wxTE_READONLY), 1, wxRIGHT, 10)
+            sizer.Add(wx.TextCtrl(self, -1, "Yes", style=wx.TE_READONLY), 1, wx.RIGHT, 10)
         else:
-            sizer.Add(wxTextCtrl(self, -1, "No", style=wxTE_READONLY), 1, wxRIGHT, 10)
-        sizer.Add(wxTextCtrl(self, -1, "%d" % self.SIM.chv1_tries_left, style=wxTE_READONLY), 1, wxRIGHT, 10)
+            sizer.Add(wx.TextCtrl(self, -1, "No", style=wx.TE_READONLY), 1, wx.RIGHT, 10)
+        sizer.Add(wx.TextCtrl(self, -1, "%d" % self.SIM.chv1_tries_left, style=wx.TE_READONLY), 1, wx.RIGHT, 10)
 
-        sizer.Add(wxskinStaticText(self, -1, "PIN2"), 1, wxLEFT, 10)
+        sizer.Add(wxskinStaticText(self, -1, "PIN2"), 1, wx.LEFT, 10)
         if self.SIM.chv2_enabled:
-            sizer.Add(wxTextCtrl(self, -1, "Yes", style=wxTE_READONLY), 1, wxRIGHT, 10)
+            sizer.Add(wx.TextCtrl(self, -1, "Yes", style=wx.TE_READONLY), 1, wx.RIGHT, 10)
         else:
-            sizer.Add(wxTextCtrl(self, -1, "No", style=wxTE_READONLY), 1, wxRIGHT, 10)
-        sizer.Add(wxTextCtrl(self, -1, "%d" % self.SIM.chv2_tries_left, style=wxTE_READONLY), 1, wxRIGHT, 10)
+            sizer.Add(wx.TextCtrl(self, -1, "No", style=wx.TE_READONLY), 1, wx.RIGHT, 10)
+        sizer.Add(wx.TextCtrl(self, -1, "%d" % self.SIM.chv2_tries_left, style=wx.TE_READONLY), 1, wx.RIGHT, 10)
 
         self.SetSizer(sizer)
         self.SetAutoLayout(1) 
@@ -125,21 +125,21 @@ class pySIMInfo(wxskinFrame):
 
     def createWidgets(self):
         # Main window resizer object
-        sizer = wxBoxSizer(wxVERTICAL) 
+        sizer = wx.BoxSizer(wx.VERTICAL) 
 
-        sizer.Add(topPanel(self, self.SIM), 1, wxALL|wxEXPAND, 5)
-        sizer.Add(bottomPanel(self, self.SIM), 1, wxALL|wxEXPAND, 5)
-        #buttons = wxBoxSizer(wxHORIZONTAL)
-        #buttons.Add(wxButton(self, ID_BUTTON_CHANGE_PIN, "Okay"), 1, wxALIGN_LEFT | wxALL, 20)
-        #buttons.Add(wxButton(self, wxID_CANCEL, "Cancel"), 1, wxALIGN_RIGHT | wxALL, 20)
-        #sizer.Add(buttons, 1, wxALL)
+        sizer.Add(topPanel(self, self.SIM), 1, wx.ALL|wx.EXPAND, 5)
+        sizer.Add(bottomPanel(self, self.SIM), 1, wx.ALL|wx.EXPAND, 5)
+        #buttons = wx.BoxSizer(wx.HORIZONTAL)
+        #buttons.Add(wx.Button(self, ID_BUTTON_CHANGE_PIN, "Okay"), 1, wx.ALIGN_LEFT | wx.ALL, 20)
+        #buttons.Add(wx.Button(self, wxID_CANCEL, "Cancel"), 1, wx.ALIGN_RIGHT | wx.ALL, 20)
+        #sizer.Add(buttons, 1, wx.ALL)
 
         self.SetSizer(sizer) 
         self.SetAutoLayout(1) 
         sizer.Fit(self)
         self.Layout()
 
-        EVT_CLOSE(self, self.closeWindow)
+        wx.EVT_CLOSE(self, self.closeWindow)
 
     def closeWindow(self, event):
         self.Destroy()

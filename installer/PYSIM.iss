@@ -3,11 +3,11 @@
 
 [Setup]
 AppName=SimReader
-AppVerName=SimReader 1.3
+AppVerName=SimReader 1.4
 AppPublisher=Todd Whiteman
-AppPublisherURL=http://twhiteman.netfirms.com/pySIM.html
-AppSupportURL=http://twhiteman.netfirms.com/pySIM.html
-AppUpdatesURL=http://twhiteman.netfirms.com/pySIM.html
+AppPublisherURL=http://sourceforge.net/projects/simreader
+AppSupportURL=http://sourceforge.net/projects/simreader
+AppUpdatesURL=http://sourceforge.net/projects/simreader
 DefaultDirName={pf}\SimReader
 DefaultGroupName=SimReader
 
@@ -15,23 +15,13 @@ DefaultGroupName=SimReader
 Name: "desktopicon"; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"
 
 [Files]
-Source: "C:\Programming\Python\pySimReader\installer\pySimReader.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Programming\Python\pySimReader\installer\pySIM.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Windows\System32\msvcr71.dll"; DestDir: "{sys}"; Flags: allowunsafefiles
-; Source: "C:\Programming\Python\pySimReader\installer\_PCSCHandle.dll"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "C:\Programming\Python\pySimReader\installer\_sre.pyd"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "C:\Programming\Python\pySimReader\installer\datetime.pyd"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "C:\Programming\Python\pySimReader\installer\library.zip"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "C:\Programming\Python\pySimReader\installer\python23.dll"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "C:\Programming\Python\pySimReader\installer\w9xpopen.exe"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "C:\Programming\Python\pySimReader\installer\wxc.pyd"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "C:\Programming\Python\pySimReader\installer\wxmsw24h.dll"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "C:\Programming\Python\pySimReader\installer\xrcc.pyd"; DestDir: "{app}"; Flags: ignoreversion
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+Source: "C:\Programming\Python\pySimReader2\installer\pySimReader.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Programming\Python\pySimReader2\installer\pySIM.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Windows\System32\msvcr71.dll"; DestDir: "{sys}"; Flags: onlyifdoesntexist allowunsafefiles
 
 [Icons]
-Name: "{group}\SimReader"; Filename: "{app}\pySimReader.exe"
-Name: "{userdesktop}\SimReader"; Filename: "{app}\pySimReader.exe"; Tasks: desktopicon
+Name: "{group}\SimReader"; Filename: "{app}\pySimReader.exe"; IconFilename: "{app}\pySIM.ico"
+Name: "{userdesktop}\SimReader"; Filename: "{app}\pySimReader.exe"; Tasks: desktopicon; IconFilename: "{app}\pySIM.ico"
 
 [Run]
 Filename: "{app}\pySimReader.exe"; Description: "Launch Sim Reader"; Flags: nowait postinstall skipifsilent

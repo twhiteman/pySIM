@@ -19,35 +19,35 @@
 #===============================================================================
 
 #import win32com.client
-from wxPython.wx import *
-from wxPython.lib.mixins.listctrl import wxColumnSorterMixin
+import wx
+from wx.lib.mixins.listctrl import ColumnSorterMixin
 from pySIMconstants import *
 from pySIMutils import *
 from pySIMskin import *
 from traceback import print_exc
 from binascii import hexlify, unhexlify
 
-ID_LISTCTRL = wxNewId()
-ID_MENU_FILE_READ = wxNewId()
-ID_MENU_FILE_EXPORT = wxNewId()
-ID_MENU_FILE_IMPORT = wxNewId()
-ID_MENU_FILE_EXIT = wxNewId()
-ID_BUTTON_OK = wxNewId()
-ID_BUTTON_OVERWRITE = wxNewId()
-ID_BUTTON_COPY = wxNewId()
-ID_BUTTON_SKIP = wxNewId()
-ID_BUTTON_CANCEL = wxNewId()
-ID_CHECKBOX_APPLY_ALL = wxNewId()
+ID_LISTCTRL = wx.NewId()
+ID_MENU_FILE_READ = wx.NewId()
+ID_MENU_FILE_EXPORT = wx.NewId()
+ID_MENU_FILE_IMPORT = wx.NewId()
+ID_MENU_FILE_EXIT = wx.NewId()
+ID_BUTTON_OK = wx.NewId()
+ID_BUTTON_OVERWRITE = wx.NewId()
+ID_BUTTON_COPY = wx.NewId()
+ID_BUTTON_SKIP = wx.NewId()
+ID_BUTTON_CANCEL = wx.NewId()
+ID_CHECKBOX_APPLY_ALL = wx.NewId()
 
 ADN_FILE_PATH = ["3F00", "7F10", "6F3A"]
 FDN_FILE_PATH = ["3F00", "7F10", "6F3B"]
 
-class Phonebook(wxskinFrame, wxColumnSorterMixin):
+class Phonebook(wxskinFrame, ColumnSorterMixin):
     def __init__(self, master, SIMcontrol, filepath):
         self.parent = master
         self.SIM = SIMcontrol
         self.filepath = filepath
-        wxskinFrame.__init__(self, self.parent, -1, "Phonebook", wxPyDefaultPosition, (500, 400))
+        wxskinFrame.__init__(self, self.parent, -1, "Phonebook", wx.DefaultPosition, (500, 400))
         self.numberRecords = 0
         self.abortedRead = 0
         self.itemDataMap = {}
@@ -56,10 +56,10 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
 
     def createMenus(self):
         # Creating the menubar.
-        menuBar = wxMenuBar()
+        menuBar = wx.MenuBar()
 
         # Setting up the menu.
-        filemenu = wxMenu()
+        filemenu = wx.Menu()
         filemenu.Append(ID_MENU_FILE_READ, "Read"," Read your phonebook contacts from your SIM.")
         filemenu.AppendSeparator()
         filemenu.Append(ID_MENU_FILE_EXPORT, "Export..."," Export your phone contacts to file")
@@ -73,31 +73,31 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
         self.SetMenuBar(menuBar)
 
         #Add the menu handlers
-        EVT_MENU(self, ID_MENU_FILE_READ, self.read)
-        EVT_MENU(self, ID_MENU_FILE_EXPORT, self.doExport)
-        EVT_MENU(self, ID_MENU_FILE_IMPORT, self.doImport)
-        EVT_MENU(self, ID_MENU_FILE_EXIT, self.closeWindow)
+        wx.EVT_MENU(self, ID_MENU_FILE_READ, self.read)
+        wx.EVT_MENU(self, ID_MENU_FILE_EXPORT, self.doExport)
+        wx.EVT_MENU(self, ID_MENU_FILE_IMPORT, self.doImport)
+        wx.EVT_MENU(self, ID_MENU_FILE_EXIT, self.closeWindow)
 
     def createWidgets(self):
-        self.listCtrl = wxskinListCtrl(self, ID_LISTCTRL, style=wxLC_REPORT|wxSUNKEN_BORDER|wxLC_SINGLE_SEL|wxLC_VRULES|wxLC_HRULES)
+        self.listCtrl = wxskinListCtrl(self, ID_LISTCTRL, style=wx.LC_REPORT|wx.SUNKEN_BORDER|wx.LC_SINGLE_SEL|wx.LC_VRULES|wx.LC_HRULES)
         self.listCtrl.InsertColumn(0, "Name")
         self.listCtrl.InsertColumn(1, "Number")
 
-        wxColumnSorterMixin.__init__(self, 2)
+        ColumnSorterMixin.__init__(self, 2)
 
         self.currentItem = 0
 
-        EVT_SIZE(self, self.OnSize)
-        EVT_LIST_ITEM_SELECTED(self, ID_LISTCTRL, self.OnItemSelected)
-        EVT_LIST_ITEM_ACTIVATED(self, ID_LISTCTRL, self.OnItemActivated)
-        EVT_CLOSE(self, self.closeWindow)
+        wx.EVT_SIZE(self, self.OnSize)
+        wx.EVT_LIST_ITEM_SELECTED(self, ID_LISTCTRL, self.OnItemSelected)
+        wx.EVT_LIST_ITEM_ACTIVATED(self, ID_LISTCTRL, self.OnItemActivated)
+        wx.EVT_CLOSE(self, self.closeWindow)
 
-        EVT_LEFT_DCLICK(self.listCtrl, self.OnPopupEdit)
-        EVT_RIGHT_DOWN(self.listCtrl, self.OnRightDown)
+        wx.EVT_LEFT_DCLICK(self.listCtrl, self.OnPopupEdit)
+        wx.EVT_RIGHT_DOWN(self.listCtrl, self.OnRightDown)
 
         # for wxMSW and wxGTK respectively
-        EVT_COMMAND_RIGHT_CLICK(self.listCtrl, ID_LISTCTRL, self.OnRightClick)
-        EVT_RIGHT_UP(self.listCtrl, self.OnRightClick)
+        wx.EVT_COMMAND_RIGHT_CLICK(self.listCtrl, ID_LISTCTRL, self.OnRightClick)
+        wx.EVT_RIGHT_UP(self.listCtrl, self.OnRightClick)
 
     def showWindow(self):
         self.parent.Show(0)
@@ -113,8 +113,8 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
 
     def doExport(self, event):
         export_count = 0
-        dlg = wxFileDialog(self, "Save to file:", ".", "", "Text (*.txt)|*.txt", wxSAVE|wxOVERWRITE_PROMPT)
-        if dlg.ShowModal() == wxID_OK:
+        dlg = wx.FileDialog(self, "Save to file:", ".", "", "Text (*.txt)|*.txt", wx.SAVE|wx.OVERWRITE_PROMPT)
+        if dlg.ShowModal() == wx.ID_OK:
             i = dlg.GetFilterIndex()
             if i == 0: # Text format
                 try:
@@ -150,8 +150,8 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
         dlg.Destroy()
 
     def doImport(self, event):
-        dlg = wxFileDialog(self, "Open file:", ".", "", "Text (*.txt)|*.txt", wxOPEN)
-        if dlg.ShowModal() == wxID_OK:
+        dlg = wx.FileDialog(self, "Open file:", ".", "", "Text (*.txt)|*.txt", wx.OPEN)
+        if dlg.ShowModal() == wx.ID_OK:
 
             # Create a list of phonebook name entries
             oldNameList = {}
@@ -183,17 +183,17 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
                         newNameList[name] = (0, number)
                     else:
                         dlgError = wxskinMessageDialog(self, "Import file is an unknown format.\n\nLine %d: %s\n\nContinue with the next line in import file?" % (line_count, line),
-                                              'Import file error', wxYES_NO | wxICON_INFORMATION)
+                                              'Import file error', wx.YES_NO | wx.ICON_INFORMATION)
                         ret = dlgError.ShowModal()
                         dlgError.Destroy()
-                        if ret == wxID_YES:
+                        if ret == wx.ID_YES:
                             continue
                         else:
                             break
 
             import_count = [0,0,0,0,0,0]
             apply_all = 0
-            dlgGuage = wxskinProgressDialog("Import file to phonebook", "Importing %d phonebook entries" % len(newNameList), len(newNameList) + 1, self, wxPD_CAN_ABORT | wxPD_APP_MODAL)
+            dlgGuage = wxskinProgressDialog("Import file to phonebook", "Importing %d phonebook entries" % len(newNameList), len(newNameList) + 1, self, wx.PD_CAN_ABORT | wx.PD_APP_MODAL)
             for namekey in newNameList.keys():
                 import_type = 1
                 import_count[0] += 1
@@ -202,10 +202,10 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
 
                 if len(name) > self.nameLength:
                     dlgError = wxskinMessageDialog(self, "Name '%s' is too long.\nOK to truncate to '%s'?\n\nIf you select no, then this entry will be ignored." % (name, name[:self.nameLength]),
-                      'Import file error', wxYES_NO | wxICON_INFORMATION)
+                      'Import file error', wx.YES_NO | wx.ICON_INFORMATION)
                     ret = dlgError.ShowModal()
                     dlgError.Destroy()
-                    if ret != wxID_YES:
+                    if ret != wx.ID_YES:
                         import_count[4] += 1
                         continue
                     name = name[:self.nameLength]
@@ -222,10 +222,10 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
                             apply_all = funct
                         importDlg.Destroy()
                     else:
-                        ret = wxID_OK
+                        ret = wx.ID_OK
                         funct = apply_all
 
-                    if ret == wxID_OK:
+                    if ret == wx.ID_OK:
                         if funct == ID_BUTTON_OVERWRITE:
                             pos = oldNameList[name][0]
                             import_type = 2
@@ -245,7 +245,7 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
                     break
 
                 try:
-                    if self.writePhonebookEntry(pos, name, number) == wxID_NO:
+                    if self.writePhonebookEntry(pos, name, number) == wx.ID_NO:
                         break
                     self.itemDataMap[pos] = (name, number)
                     import_count[import_type] += 1
@@ -276,7 +276,7 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
             return
 
         apdu = "A0B2%s04" + IntToHex(self.recordLength)
-        dlg = wxskinProgressDialog("Phonebook", "Reading your phonebook entries", self.numberRecords + 1, self, wxPD_CAN_ABORT | wxPD_APP_MODAL)
+        dlg = wxskinProgressDialog("Phonebook", "Reading your phonebook entries", self.numberRecords + 1, self, wx.PD_CAN_ABORT | wx.PD_APP_MODAL)
         try:
             hexNameLen = self.nameLength << 1
             for i in range(1, self.numberRecords + 1):
@@ -326,7 +326,7 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
             self.listCtrl.SetItemData(i, k)
             i += 1
 
-        self.SortListItems(0, true)
+        self.SortListItems(0, True)
         self.listCtrl.SetColumnWidth(0, 200)
         self.listCtrl.SetColumnWidth(1, 200)
  
@@ -357,31 +357,31 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
         self.listCtrl.SetDimensions(0, 0, w, h)
 
     def OnRightClick(self, event):
-        menu = wxMenu()
-        tPopupID0 = wxNewId()
-        tPopupID1 = wxNewId()
-        tPopupID2 = wxNewId()
-        tPopupID3 = wxNewId()
-        tPopupID4 = wxNewId()
-        tPopupID5 = wxNewId()
+        menu = wx.Menu()
+        tPopupID0 = wx.NewId()
+        tPopupID1 = wx.NewId()
+        tPopupID2 = wx.NewId()
+        tPopupID3 = wx.NewId()
+        tPopupID4 = wx.NewId()
+        tPopupID5 = wx.NewId()
         menu.Append(tPopupID2, "Edit")
         menu.Append(tPopupID0, "New")
         menu.Append(tPopupID1, "Copy")
         menu.AppendSeparator()
         menu.Append(tPopupID3, "Delete")
         menu.Append(tPopupID4, "Delete All")
-        EVT_MENU(self, tPopupID2, self.OnPopupEdit)
-        EVT_MENU(self, tPopupID0, self.OnPopupNew)
-        EVT_MENU(self, tPopupID1, self.OnPopupCopy)
-        EVT_MENU(self, tPopupID3, self.OnPopupDelete)
-        EVT_MENU(self, tPopupID4, self.OnPopupDeleteAll)
+        wx.EVT_MENU(self, tPopupID2, self.OnPopupEdit)
+        wx.EVT_MENU(self, tPopupID0, self.OnPopupNew)
+        wx.EVT_MENU(self, tPopupID1, self.OnPopupCopy)
+        wx.EVT_MENU(self, tPopupID3, self.OnPopupDelete)
+        wx.EVT_MENU(self, tPopupID4, self.OnPopupDeleteAll)
         if len(self.itemDataMap) == 0:
             for m in menu.GetMenuItems():
-                m.Enable(false)
+                m.Enable(False)
             m = menu.FindItemById(tPopupID0)
-            m.Enable(true)
+            m.Enable(True)
             
-        self.PopupMenu(menu, wxPoint(self.x, self.y))
+        self.PopupMenu(menu, wx.Point(self.x, self.y))
         menu.Destroy()
         event.Skip()
 
@@ -389,11 +389,11 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
     def writePhonebookEntry(self, pos, name='', number=''):
         if self.abortedRead:
             dlg = wxskinMessageDialog(self, "Did not finish reading your entire SIM card phonebook.\nAs a result, this may overwrite any exisiting phonebook contacts that have not been read yet!\n\nDo you wish to continue anyway?",
-                                  'Overwrite warning', wxYES_NO | wxICON_WARNING)
+                                  'Overwrite warning', wx.YES_NO | wx.ICON_WARNING)
             ret = dlg.ShowModal()
             dlg.Destroy()
-            if ret == wxID_NO:
-                return wxID_NO
+            if ret == wx.ID_NO:
+                return wx.ID_NO
             else:
                 self.abortedRead = 0
 
@@ -406,11 +406,11 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
                                     padString(GSMnumber, 22, 'F'))
         pdu = self.updateRecordPDU % (IntToHex(pos), IntToHex(self.recordLength), data)
         self.SIM.sendAPDUmatchSW(pdu, SW_OK)
-        return wxID_YES
+        return wx.ID_YES
 
     def OnPopupNew(self, event):
         p = PhonebookEditEntry(self, '', '', 1, self.nameLength)
-        if p.ShowModal() == wxID_OK:
+        if p.ShowModal() == wx.ID_OK:
             name, number = p.getValues()
             pos = self.findFreePosition()
             if pos:
@@ -418,7 +418,7 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
                     self.SIM.gotoFile(self.filepath)
                     if not self.SIM.checkAndVerifyCHV1(CHV_UPDATE):
                         raise "Access conditions not met."
-                    if self.writePhonebookEntry(pos, name, number) == wxID_YES:
+                    if self.writePhonebookEntry(pos, name, number) == wx.ID_YES:
                         self.itemDataMap[pos] = (name, number)
                         self.UpdateView()
                 except:
@@ -431,7 +431,7 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
         name = self.getColumnText(self.currentItem, 0)
         number = self.getColumnText(self.currentItem, 1)
         p = PhonebookEditEntry(self, name, number, 1, self.nameLength)
-        if p.ShowModal() == wxID_OK:
+        if p.ShowModal() == wx.ID_OK:
             name, number = p.getValues()
             pos = self.findFreePosition()
             if pos:
@@ -439,7 +439,7 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
                     self.SIM.gotoFile(self.filepath)
                     if not self.SIM.checkAndVerifyCHV1(CHV_UPDATE):
                         raise "Access conditions not met."
-                    if self.writePhonebookEntry(pos, name, number) == wxID_YES:
+                    if self.writePhonebookEntry(pos, name, number) == wx.ID_YES:
                         self.itemDataMap[pos] = (name, number)
                         self.UpdateView()
                 except:
@@ -452,14 +452,14 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
         name = self.getColumnText(self.currentItem, 0)
         number = self.getColumnText(self.currentItem, 1)
         p = PhonebookEditEntry(self, name, number, 1, self.nameLength)
-        if p.ShowModal() == wxID_OK:
+        if p.ShowModal() == wx.ID_OK:
             name, number = p.getValues()
             pos = self.listCtrl.GetItemData(self.currentItem)
             try:
                 self.SIM.gotoFile(self.filepath)
                 if not self.SIM.checkAndVerifyCHV1(CHV_UPDATE):
                     raise "Access conditions not met."
-                if self.writePhonebookEntry(pos, name, number) == wxID_YES:
+                if self.writePhonebookEntry(pos, name, number) == wx.ID_YES:
                     self.itemDataMap[pos] = (name, number)
                     self.UpdateView()
             except:
@@ -481,12 +481,12 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
     delete_confirm_text = "This will delete all your phonebook entries!!\n\nAre you sure you want to delete them all?\n"
     def OnPopupDeleteAll(self, event):
         dlg = wxskinMessageDialog(self, self.delete_confirm_text,
-                              'Confirm Deletion', wxYES_NO | wxICON_INFORMATION)
+                              'Confirm Deletion', wx.YES_NO | wx.ICON_INFORMATION)
         ret = dlg.ShowModal()
         dlg.Destroy()
-        if ret == wxID_YES:
+        if ret == wx.ID_YES:
 
-            dlg = wxskinProgressDialog("Phonebook deletion", "Deleting your %d phonebook entries" % len(self.itemDataMap), len(self.itemDataMap) + 1, self, wxPD_CAN_ABORT | wxPD_APP_MODAL)
+            dlg = wxskinProgressDialog("Phonebook deletion", "Deleting your %d phonebook entries" % len(self.itemDataMap), len(self.itemDataMap) + 1, self, wx.PD_CAN_ABORT | wx.PD_APP_MODAL)
             try:
                 self.SIM.gotoFile(self.filepath)
                 if not self.SIM.checkAndVerifyCHV1(CHV_UPDATE):
@@ -529,39 +529,39 @@ class Phonebook(wxskinFrame, wxColumnSorterMixin):
 class PhonebookEditEntry(wxskinDialog):
     def __init__(self, parent, name, number, minnamelen, maxnamelen):
         wxskinDialog.__init__(self, parent, -1, "Phonebook edit entry")
-        self.SetAutoLayout(true)
+        self.SetAutoLayout(True)
         self.name = None
         self.number = None
-        nameTextId = wxNewId()
+        nameTextId = wx.NewId()
 
         # Main window resizer object
-        border = wxBoxSizer(wxVERTICAL)
+        border = wx.BoxSizer(wx.VERTICAL)
 
-        label = wxStaticText(self, -1, "Enter the phonebook entry name, number and press OK.")
-        border.Add(label, 1, wxALL, 10)
+        label = wx.StaticText(self, -1, "Enter the phonebook entry name, number and press OK.")
+        border.Add(label, 1, wx.ALL, 10)
 
-        #fgs = wxFlexGridSizer(2,3,5,20)
-        fgs = wxBoxSizer(wxHORIZONTAL)
-        label = wxStaticText(self, -1, "Name (max %d): " % maxnamelen)
-        fgs.Add(label, 1, wxALIGN_LEFT | wxLEFT, 10)
-        self.nameCtrl = wxTextCtrl(self, nameTextId, name, validator = pySIMvalidator(None, minnamelen, maxnamelen))
-        fgs.Add(self.nameCtrl, 1, wxALIGN_RIGHT | wxRIGHT, 10)
-        border.Add(fgs, 1, wxALL)
+        #fgs = wx.FlexGridSizer(2,3,5,20)
+        fgs = wx.BoxSizer(wx.HORIZONTAL)
+        label = wx.StaticText(self, -1, "Name (max %d): " % maxnamelen)
+        fgs.Add(label, 1, wx.ALIGN_LEFT | wx.LEFT, 10)
+        self.nameCtrl = wx.TextCtrl(self, nameTextId, name, validator = pySIMvalidator(None, minnamelen, maxnamelen))
+        fgs.Add(self.nameCtrl, 1, wx.ALIGN_RIGHT | wx.RIGHT, 10)
+        border.Add(fgs, 1, wx.ALL)
 
-        fgs = wxBoxSizer(wxHORIZONTAL)
-        label = wxStaticText(self, -1, "Number (max 20): ")
-        fgs.Add(label, 1, wxALIGN_LEFT | wxLEFT, 10)
-        self.numberCtrl = wxTextCtrl(self, -1, number, validator = pySIMvalidator("+*#pw0123456789", None, 20))
-        fgs.Add(self.numberCtrl, 1, wxALIGN_RIGHT | wxRIGHT, 10)
-        border.Add(fgs, 1, wxALL)
+        fgs = wx.BoxSizer(wx.HORIZONTAL)
+        label = wx.StaticText(self, -1, "Number (max 20): ")
+        fgs.Add(label, 1, wx.ALIGN_LEFT | wx.LEFT, 10)
+        self.numberCtrl = wx.TextCtrl(self, -1, number, validator = pySIMvalidator("+*#pw0123456789", None, 20))
+        fgs.Add(self.numberCtrl, 1, wx.ALIGN_RIGHT | wx.RIGHT, 10)
+        border.Add(fgs, 1, wx.ALL)
 
-        buttons = wxBoxSizer(wxHORIZONTAL)
-        buttons.Add(wxButton(self, ID_BUTTON_OK, "Okay"), 1, wxALIGN_LEFT | wxALL, 20)
-        buttons.Add(wxButton(self, wxID_CANCEL, "Cancel"), 1, wxALIGN_RIGHT | wxALL, 20)
-        border.Add(buttons, 1, wxALL)
+        buttons = wx.BoxSizer(wx.HORIZONTAL)
+        buttons.Add(wx.Button(self, ID_BUTTON_OK, "Okay"), 1, wx.ALIGN_LEFT | wx.ALL, 20)
+        buttons.Add(wx.Button(self, wx.ID_CANCEL, "Cancel"), 1, wx.ALIGN_RIGHT | wx.ALL, 20)
+        border.Add(buttons, 1, wx.ALL)
 
-        EVT_BUTTON(self, ID_BUTTON_OK, self.onOK)
-        EVT_TEXT_ENTER(self, nameTextId, self.onOK)
+        wx.EVT_BUTTON(self, ID_BUTTON_OK, self.onOK)
+        wx.EVT_TEXT_ENTER(self, nameTextId, self.onOK)
 
         self.SetAutoLayout(1);
         self.SetSizer(border)
@@ -578,33 +578,33 @@ class PhonebookEditEntry(wxskinDialog):
                     if not dic_GSM_3_38.has_key(i):
                         pySIMmessage(self, "Invalid name. Cannot have character: %s" % i, "SIM card error")
                         return
-            self.EndModal(wxID_OK)
+            self.EndModal(wx.ID_OK)
 
 class ImportDialog(wxskinDialog):
     def __init__(self, parent, name):
         wxskinDialog.__init__(self, parent, -1, "Phonebook import")
-        self.SetAutoLayout(true)
+        self.SetAutoLayout(True)
         self.function = 0
 
         # Main window resizer object
-        border = wxBoxSizer(wxVERTICAL)
+        border = wx.BoxSizer(wx.VERTICAL)
 
-        label = wxStaticText(self, -1, "Name '%s' already exists in SIM phonebook.\n\nDo you want to overwrite exisiting, duplicate or skip!?" % (name))
-        border.Add(label, 1, wxALL, 10)
+        label = wx.StaticText(self, -1, "Name '%s' already exists in SIM phonebook.\n\nDo you want to overwrite exisiting, duplicate or skip!?" % (name))
+        border.Add(label, 1, wx.ALL, 10)
 
-        buttons = wxBoxSizer(wxHORIZONTAL)
-        buttons.Add(wxButton(self, ID_BUTTON_OVERWRITE, "Overwrite"), 1, wxALIGN_LEFT | wxALL, 20)
-        buttons.Add(wxButton(self, ID_BUTTON_COPY, "Duplicate"), 1, wxALIGN_RIGHT | wxALL, 20)
-        buttons.Add(wxButton(self, ID_BUTTON_SKIP, "Skip"), 1, wxALIGN_RIGHT | wxALL, 20)
-        buttons.Add(wxButton(self, wxID_CANCEL, "Cancel"), 1, wxALIGN_RIGHT | wxALL, 20)
-        border.Add(buttons, 1, wxALL)
+        buttons = wx.BoxSizer(wx.HORIZONTAL)
+        buttons.Add(wx.Button(self, ID_BUTTON_OVERWRITE, "Overwrite"), 1, wx.ALIGN_LEFT | wx.ALL, 20)
+        buttons.Add(wx.Button(self, ID_BUTTON_COPY, "Duplicate"), 1, wx.ALIGN_RIGHT | wx.ALL, 20)
+        buttons.Add(wx.Button(self, ID_BUTTON_SKIP, "Skip"), 1, wx.ALIGN_RIGHT | wx.ALL, 20)
+        buttons.Add(wx.Button(self, wx.ID_CANCEL, "Cancel"), 1, wx.ALIGN_RIGHT | wx.ALL, 20)
+        border.Add(buttons, 1, wx.ALL)
 
-        self.applyAll = wxCheckBox(self, ID_CHECKBOX_APPLY_ALL,   "  Apply to all", wxPoint(65, 40), wxSize(150, 20), wxNO_BORDER)
-        border.Add(self.applyAll, 1, wxALIGN_CENTER | wxALL)
+        self.applyAll = wx.CheckBox(self, ID_CHECKBOX_APPLY_ALL,   "  Apply to all", wx.Point(65, 40), wx.Size(150, 20), wx.NO_BORDER)
+        border.Add(self.applyAll, 1, wx.ALIGN_CENTER | wx.ALL)
 
-        EVT_BUTTON(self, ID_BUTTON_OVERWRITE, self.onOverwrite)
-        EVT_BUTTON(self, ID_BUTTON_COPY, self.onDuplicate)
-        EVT_BUTTON(self, ID_BUTTON_SKIP, self.onSkip)
+        wx.EVT_BUTTON(self, ID_BUTTON_OVERWRITE, self.onOverwrite)
+        wx.EVT_BUTTON(self, ID_BUTTON_COPY, self.onDuplicate)
+        wx.EVT_BUTTON(self, ID_BUTTON_SKIP, self.onSkip)
 
         self.SetAutoLayout(1);
         self.SetSizer(border)
@@ -613,15 +613,15 @@ class ImportDialog(wxskinDialog):
 
     def onOverwrite(self, event):
         self.function = ID_BUTTON_OVERWRITE
-        self.EndModal(wxID_OK)
+        self.EndModal(wx.ID_OK)
 
     def onDuplicate(self, event):
         self.function = ID_BUTTON_COPY
-        self.EndModal(wxID_OK)
+        self.EndModal(wx.ID_OK)
 
     def onSkip(self, event):
         self.function = ID_BUTTON_SKIP
-        self.EndModal(wxID_OK)
+        self.EndModal(wx.ID_OK)
 
     def getFunction(self):
         return self.function
