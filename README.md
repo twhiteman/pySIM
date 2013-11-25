@@ -19,6 +19,10 @@ the build process - removing the Microsoft Visual Studio and Swig dependencies).
 
 ![Screenshot](html/Images/pySIMscreenshot1.jpg)
 
+## License
+
+GPL - GNU General Public License
+
 ## Build Requirements
 
 * Microsoft Visual Studio
