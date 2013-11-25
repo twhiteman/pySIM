@@ -3,6 +3,9 @@
 This is the source code for the pySimReader application. It requires a PCSC
 compatible SIM reader to be attached to the computer.
 
+The main product page is here:
+http://twhiteman.netfirms.com/pySIM.html
+
 You can download the Windows installer from here:
 https://github.com/toddw-as/SimReader/blob/master/installer/pySimReader_v14_setup.exe?raw=true
 
