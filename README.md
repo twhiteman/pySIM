@@ -15,6 +15,10 @@ Component APIs (note that if I were to rewrite this code today, I'd probably
 utilize Python ctypes instead of this wrapper library - as that would simplify
 the build process - removing the Microsoft Visual Studio and Swig dependencies).
 
+## Screenshot
+
+![Screenshot](html/Images/pySIMscreenshot1.jpg)
+
 ## Build Requirements
 
 * Microsoft Visual Studio
